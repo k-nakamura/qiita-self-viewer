@@ -1,37 +1,42 @@
-import React, {useState} from 'react';
-import {Button, Card, Icon} from "semantic-ui-react";
+import React, {useEffect, useState} from 'react';
+import {Container, Grid, Segment} from "semantic-ui-react";
+import {getItems} from '../api/Items';
+import ItemList from "../component/ItemList";
+import Item from "../dto/Item";
+import PageHeader from "../component/PageHeader";
 
 function Home() {
-  const [count, setCount] = useState(0);
-  const handlePlus = () => setCount(count + 1);
-  const handleMinus = () => setCount(count - 1);
+  const [items, setItems] = useState<Item[]>([]);
+  const [id, setID] = useState<string>('');
+
+  useEffect(() => {
+      getItems()
+        .then(r => setItems(r));
+    }, []
+  )
 
   return (
     <div>
-      This is Home.
-      <Card>
-        <Card.Header textAlign={"left"}>
-          Count
-        </Card.Header>
-        <Card.Meta textAlign={"left"}>
-          count up/down
-        </Card.Meta>
-        <Card.Content>
-          <Card.Description>
-            <Button.Group>
-              <Button icon onClick={handlePlus}>
-                <Icon name={'plus'}/>
-              </Button>
-              <Button.Or text={count}/>
-              <Button icon onClick={handleMinus}>
-                <Icon name={'minus'}/>
-              </Button>
-            </Button.Group>
-          </Card.Description>
-          <Card.Description>
-          </Card.Description>
-        </Card.Content>
-      </Card>
+      <PageHeader/>
+      <Container className={"main-container"}>
+        <Grid>
+          <Grid.Row centered>
+            <Grid.Column width={10}>
+              <Segment>
+                投稿:&nbsp;{items.length}&nbsp;件
+                <Segment>
+                  <ItemList items={items} setID={setID}/>
+                </Segment>
+              </Segment>
+            </Grid.Column>
+            <Grid.Column width={6}>
+              <Segment>
+
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
     </div>
   )
 }

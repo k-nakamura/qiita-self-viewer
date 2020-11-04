@@ -7,7 +7,7 @@ import 'semantic-ui-less/semantic.less';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );

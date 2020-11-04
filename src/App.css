@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+.main-container {
+  padding-top: 4em;
+}
+
+div.ui.list > .item {
+  padding-top: 0.7em;
+  padding-bottom: 0.7em;
+}
+
+.item-tag{
+  padding-top: 0.5em;
+}
