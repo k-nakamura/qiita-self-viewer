@@ -14,7 +14,7 @@ function UserList(props: { id: string; }) {
   const [item, setItem] = useState<Item | null>(null);
   const [likes, setLikes] = useState<Like[]>([]);
   const [stockers, setStockers] = useState<User[]>([]);
-  const [setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
