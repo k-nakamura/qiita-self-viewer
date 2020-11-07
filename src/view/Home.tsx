@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Container, Grid, Segment} from "semantic-ui-react";
 import {getItems} from '../api/Items';
 import ItemList from "../component/ItemList";
-import Item from "../dto/Item";
+import {Item} from "../dto/Item";
 import PageHeader from "../component/PageHeader";
+import UserList from "../component/UserList";
 
 function Home() {
   const [items, setItems] = useState<Item[]>([]);
@@ -21,7 +22,7 @@ function Home() {
       <Container className={"main-container"}>
         <Grid>
           <Grid.Row centered>
-            <Grid.Column width={10}>
+            <Grid.Column width={9}>
               <Segment>
                 投稿:&nbsp;{items.length}&nbsp;件
                 <Segment>
@@ -29,10 +30,8 @@ function Home() {
                 </Segment>
               </Segment>
             </Grid.Column>
-            <Grid.Column width={6}>
-              <Segment>
-
-              </Segment>
+            <Grid.Column width={7}>
+              <UserList id={id}/>
             </Grid.Column>
           </Grid.Row>
         </Grid>

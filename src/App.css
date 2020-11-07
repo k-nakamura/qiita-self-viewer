@@ -41,8 +41,16 @@
   padding-top: 4em;
 }
 
-div.ui.list > .item {
+div.ui.list.separated > .item {
   padding-top: 0.7em;
+  padding-bottom: 0.7em;
+}
+
+div.ui.list.separated > .item:first-child {
+  padding-top: 0;
+}
+
+div.ui.list.separated > .item:last-child {
   padding-bottom: 0.7em;
 }
 

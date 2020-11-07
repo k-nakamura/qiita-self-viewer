@@ -1,7 +1,7 @@
 import React from "react";
 import {List} from "semantic-ui-react";
 import ItemListItem from "./ItemListItem";
-import Item from "../dto/Item";
+import {Item} from "../dto/Item";
 
 
 function ItemList(props: {
@@ -10,9 +10,10 @@ function ItemList(props: {
 }) {
   return (
     <div>
-      <List divided>
-        {props.items.map(item =>
-          <ItemListItem item={item} setID={props.setID} key={item.id}/>)
+      <List divided className={'separated'}>
+        {
+          props.items.map(item =>
+            <ItemListItem item={item} setID={props.setID} key={item.id}/>)
         }
       </List>
     </div>

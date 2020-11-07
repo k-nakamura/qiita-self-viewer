@@ -1,18 +1,17 @@
 import React from "react";
 import {Icon, Label, List} from "semantic-ui-react";
-import Item from "../dto/Item";
+import {Item} from "../dto/Item";
 
-
-const formatDateTime = (date: string) =>
-  `${date.substr(0, 4)}/${date.substr(5, 2)}/${date.substr(8, 2)} ${date.substr(11, 2)}:${date.substr(14, 2)}:${date.substr(17, 2)}`;
-
-
-const paddingCount = (count: number) => count.toString().padStart(4, ' ');
 
 function ItemListItem(props: {
   item: Item;
   setID: React.Dispatch<React.SetStateAction<string>>
 }) {
+  const formatDateTime = (date: string) =>
+    `${date.substr(0, 4)}/${date.substr(5, 2)}/${date.substr(8, 2)} ${date.substr(11, 2)}:${date.substr(14, 2)}:${date.substr(17, 2)}`;
+
+  const paddingCount = (count: number) => count.toString().padStart(4, ' ');
+
   const openItemInNewTab = (url: string) => window.open(url, "_blank");
 
   return (
@@ -22,6 +21,7 @@ function ItemListItem(props: {
       </List.Content>
       <List.Header>
         {props.item.title}
+        &nbsp;
         <Icon name={'external alternate'} link
               onClick={() => props.item.url !== undefined ? openItemInNewTab(props.item.url) : {}}/>
       </List.Header>
