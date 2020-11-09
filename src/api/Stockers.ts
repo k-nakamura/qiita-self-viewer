@@ -1,5 +1,5 @@
 import axios from "axios";
-import {User} from "../dto/User";
+import {User} from "../types/User";
 
 const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 

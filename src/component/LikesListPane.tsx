@@ -1,5 +1,5 @@
 import React from "react";
-import {Like} from "../dto/Like";
+import {Like} from "../types/Like";
 import {List, Tab} from "semantic-ui-react";
 import UserListItem from "./UserListItem";
 

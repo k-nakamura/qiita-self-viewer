@@ -1,6 +1,6 @@
 import React from "react";
 import {Icon, Image, List} from "semantic-ui-react";
-import {User} from "../dto/User";
+import {User} from "../types/User";
 
 function UserListItem(props: { user: User; created_at?: string }) {
   const formatDateTime = (date: string) =>

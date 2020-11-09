@@ -1,7 +1,7 @@
 import React from "react";
 import {List, Tab} from "semantic-ui-react";
 import UserListItem from "./UserListItem";
-import {User} from "../dto/User";
+import {User} from "../types/User";
 
 
 function StockersListPane(props: { stockers: User[]; }) {

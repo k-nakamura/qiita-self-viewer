@@ -2,13 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {Container, Grid, Segment} from "semantic-ui-react";
 import {getItems} from '../api/Items';
 import ItemList from "../component/ItemList";
-import {Item} from "../dto/Item";
+import {Item} from "../types/Item";
 import PageHeader from "../component/PageHeader";
-import UserList from "../component/UserList";
+import ResponseList from "../component/ResponseList";
 
 function Home() {
   const [items, setItems] = useState<Item[]>([]);
-  const [id, setID] = useState<string>('');
 
   useEffect(() => {
       getItems()
@@ -26,12 +25,12 @@ function Home() {
               <Segment>
                 投稿:&nbsp;{items.length}&nbsp;件
                 <Segment>
-                  <ItemList items={items} setID={setID}/>
+                  <ItemList items={items}/>
                 </Segment>
               </Segment>
             </Grid.Column>
             <Grid.Column width={7}>
-              <UserList id={id}/>
+              <ResponseList/>
             </Grid.Column>
           </Grid.Row>
         </Grid>

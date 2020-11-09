@@ -4,10 +4,25 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'semantic-ui-less/semantic.less';
+import {Provider} from 'react-redux';
+import {createStore} from "redux";
+
+import {RootReducer, RootState} from "./RootReducer";
+
+import 'react-redux'
+
+declare module 'react-redux' {
+  interface DefaultRootState extends RootState {
+  }
+}
+
+const store = createStore(RootReducer)
 
 ReactDOM.render(
   <React.StrictMode>
-    <App/>
+    <Provider store={store}>
+      <App/>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

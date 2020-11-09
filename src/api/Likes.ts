@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Like} from "../dto/Like";
+import {Like} from "../types/Like";
 
 const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
