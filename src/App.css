@@ -41,19 +41,14 @@
   padding-top: 4em;
 }
 
-div.ui.list.separated > .item {
+div.ui.list.separated > .item:not(first-child) {
   padding-top: 0.7em;
+}
+
+div.ui.list.separated > .item:not(last-child) {
   padding-bottom: 0.7em;
 }
 
-div.ui.list.separated > .item:first-child {
-  padding-top: 0;
-}
-
-div.ui.list.separated > .item:last-child {
-  padding-bottom: 0.7em;
-}
-
-.item-tag{
+.item-tag {
   padding-top: 0.5em;
 }

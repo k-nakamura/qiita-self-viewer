@@ -1,29 +1,43 @@
 import axios from "axios";
 import {Item} from "../types/Item";
+import {addGetParameters} from "../util/url";
 
 const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
+export const PER_PAGE = 20;
 
-export function getItems(): Promise<Item[]> {
-  return axios.get(
-    'https://qiita.com/api/v2/authenticated_user/items',
-    {
-      headers: {
-        "content-type": "application/json",
-        'Authorization': `Bearer ${ACCESS_TOKEN}`,
+export function getItems(page: number = 1): Promise<Item[]> {
+  return new Promise<Item[]>((resolve, reject) =>
+    axios.get(
+      addGetParameters(
+        'https://qiita.com/api/v2/authenticated_user/items',
+        {page, per_page: PER_PAGE}
+      ),
+      {
+        headers: {
+          "content-type": "application/json",
+          'Authorization': `Bearer ${ACCESS_TOKEN}`,
+        }
       }
-    }
-  ).then(require => require.data);
+    ).then(
+      response => resolve(response.data),
+      error => reject(error)
+    )
+  )
 }
 
 export function getItem(item_id: string): Promise<Item> {
-  return axios.get(
-    `https://qiita.com/api/v2/items/${item_id}`,
-    {
-      headers: {
-        "content-type": "application/json",
-        'Authorization': `Bearer ${ACCESS_TOKEN}`,
+  return new Promise<Item>((resolve, reject) =>
+    axios.get(
+      `https://qiita.com/api/v2/items/${item_id}`,
+      {
+        headers: {
+          'content-type': "application/json",
+          'Authorization': `Bearer ${ACCESS_TOKEN}`,
+        }
       }
-    }
-  ).then(require => require.data);
+    ).then(
+      response => resolve(response.data),
+      error => reject(error)
+    ));
 }
 

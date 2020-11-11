@@ -7,7 +7,7 @@ import 'semantic-ui-less/semantic.less';
 import {Provider} from 'react-redux';
 import {createStore} from "redux";
 
-import {RootReducer, RootState} from "./RootReducer";
+import {RootReducer, RootState} from "./redux/reducer/RootReducer";
 
 import 'react-redux'
 

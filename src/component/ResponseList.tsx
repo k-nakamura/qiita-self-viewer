@@ -5,7 +5,7 @@ import {Like} from "../types/Like";
 import {User} from "../types/User";
 import {getItem} from "../api/Items";
 import {getLikes} from "../api/Likes";
-import {getStockers} from "../api/Stockers";
+import {getStockers, PER_PAGE} from "../api/Stockers";
 import LikesListPane from "./LikesListPane";
 import StockersListPane from "./StockersListPane";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,6 +17,8 @@ function ResponseList() {
   const [stockers, setStockers] = useState<User[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
+  const [disabledMore, setDisabledMore] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   const {selectedID, selectedCategory} = useSelector(state => state.item);
   const dispatch = useDispatch();
@@ -39,8 +41,8 @@ function ResponseList() {
         Promise.all(
           [
             getItem(selectedID),
-            getLikes(selectedID, 1),
-            getStockers(selectedID),
+            getLikes(selectedID),
+            getStockers(selectedID, 1),
           ],
         ).then(r => {
           setItem(r[0]);
@@ -48,10 +50,26 @@ function ResponseList() {
           setStockers(r[2]);
           setPage(1);
           setLoading(false);
+          if (r[2].length !== PER_PAGE) {
+            setHasMore(false);
+          }
         });
       }
     }, [selectedID]
   );
+
+  const readMore = () => {
+    setDisabledMore(true);
+    getStockers(selectedID, page + 1)
+      .then(r => {
+        setStockers([...stockers, ...r]);
+        if (r.length !== PER_PAGE) {
+          setHasMore(false);
+        }
+        setPage(page + 1);
+        setDisabledMore(false);
+      })
+  }
 
   return (
     <Segment loading={loading}>
@@ -60,7 +78,14 @@ function ResponseList() {
       </Header>
       <Tab panes={[
         {menuItem: 'LGTM', render: () => <LikesListPane likes={likes}/>},
-        {menuItem: 'ストック', render: () => <StockersListPane stockers={stockers}/>},
+        {
+          menuItem: 'ストック',
+          render: () =>
+            <StockersListPane stockers={stockers}
+                              readMore={readMore}
+                              hasMore={hasMore}
+                              disableMore={disabledMore}/>
+        },
       ]}
            activeIndex={selectedCategory}
            onTabChange={(event, data) => handleTabChange(selectedID, data.activeIndex)}
