@@ -1,34 +1,30 @@
 import React, {useEffect, useState} from "react";
 import {Header, Segment, Tab} from "semantic-ui-react";
-import {Item} from "../types/Item";
-import {Like} from "../types/Like";
-import {User} from "../types/User";
 import {getItem} from "../api/Items";
 import {getLikes} from "../api/Likes";
-import {getStockers, PER_PAGE} from "../api/Stockers";
+import {getStockers} from "../api/Stockers";
 import LikesListPane from "./LikesListPane";
 import StockersListPane from "./StockersListPane";
 import {useDispatch, useSelector} from "react-redux";
-import {selectItem} from "../redux/action/ItemAction";
+import {selectItem} from "../redux/action/SelectAction";
+import {storeItem} from "../redux/action/ItemAction";
+import {storeStockers} from "../redux/action/StockerAction";
 
 function ResponseList() {
-  const [item, setItem] = useState<Item | null>(null);
-  const [likes, setLikes] = useState<Like[]>([]);
-  const [stockers, setStockers] = useState<User[]>([]);
-  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [disabledMore, setDisabledMore] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(true);
 
-  const {selectedID, selectedCategory} = useSelector(state => state.item);
+  const {id, category} = useSelector(state => state.select);
+  const item = useSelector(state => state.item.selected.item);
+
   const dispatch = useDispatch();
-  const handleTabChange = (id: string, category: string | number | undefined) => {
-    switch (typeof category) {
+
+  const handleTabChange = (id: string, afterCategory: string | number | undefined) => {
+    switch (typeof afterCategory) {
       case "string":
-        dispatch(selectItem(id, category))
+        dispatch(selectItem(id, afterCategory))
         break;
       case "number":
-        dispatch(selectItem(id, category.toString()))
+        dispatch(selectItem(id, afterCategory.toString()))
         break;
       default:
         break;
@@ -36,40 +32,22 @@ function ResponseList() {
   };
 
   useEffect(() => {
-      if (selectedID !== '') {
+      if (id !== '') {
         setLoading(true);
         Promise.all(
           [
-            getItem(selectedID),
-            getLikes(selectedID),
-            getStockers(selectedID, 1),
+            getItem(id),
+            getLikes(id),
+            getStockers(id, 1),
           ],
         ).then(r => {
-          setItem(r[0]);
-          setLikes(r[1]);
-          setStockers(r[2]);
-          setPage(1);
+          dispatch(storeItem(r[0], r[1],));
+          dispatch(storeStockers(r[2]));
           setLoading(false);
-          if (r[2].length !== PER_PAGE) {
-            setHasMore(false);
-          }
         });
       }
-    }, [selectedID]
+    }, [id, dispatch]
   );
-
-  const readMore = () => {
-    setDisabledMore(true);
-    getStockers(selectedID, page + 1)
-      .then(r => {
-        setStockers([...stockers, ...r]);
-        if (r.length !== PER_PAGE) {
-          setHasMore(false);
-        }
-        setPage(page + 1);
-        setDisabledMore(false);
-      })
-  }
 
   return (
     <Segment loading={loading}>
@@ -77,18 +55,12 @@ function ResponseList() {
         {item !== null ? item.title : ''}
       </Header>
       <Tab panes={[
-        {menuItem: 'LGTM', render: () => <LikesListPane likes={likes}/>},
-        {
-          menuItem: 'ストック',
-          render: () =>
-            <StockersListPane stockers={stockers}
-                              readMore={readMore}
-                              hasMore={hasMore}
-                              disableMore={disabledMore}/>
-        },
+        {menuItem: 'LGTM', render: () => <LikesListPane/>},
+        {menuItem: 'ストック', render: () => <StockersListPane/>},
       ]}
-           activeIndex={selectedCategory}
-           onTabChange={(event, data) => handleTabChange(selectedID, data.activeIndex)}
+           activeIndex={category}
+           onTabChange={(event, data) =>
+             handleTabChange(id, data.activeIndex)}
       />
     </Segment>
   )

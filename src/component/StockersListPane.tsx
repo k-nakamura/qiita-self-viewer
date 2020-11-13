@@ -1,25 +1,47 @@
-import React from "react";
-import {List, Segment, Tab} from "semantic-ui-react";
+import React, {useState} from "react";
+import {Button, List, Tab} from "semantic-ui-react";
 import UserListItem from "./UserListItem";
-import {User} from "../types/User";
+import {User} from "../types/qiita-types";
+import {getStockers} from "../api/Stockers";
+import {useDispatch, useSelector} from "react-redux";
+import {addStoredStockers} from "../redux/action/StockerAction";
 
+function StockersListPane() {
+  const [disabledMore, setDisabledMore] = useState<boolean>(false);
 
-function StockersListPane(props: { stockers: User[]; readMore: () => void; hasMore: boolean; disableMore: boolean }) {
+  const id = useSelector(state => state.select.id);
+  const page = useSelector(state => state.stocker.page);
+  const hasMore = useSelector(state => state.stocker.hasMore);
+  const stockers = useSelector(state => state.stocker.stockers);
+
+  const dispatch = useDispatch();
+
+  const readMore = () => {
+    setDisabledMore(true);
+    getStockers(id, page + 1)
+      .then(r => {
+        dispatch(addStoredStockers(
+          stockers,
+          r,
+        ));
+        setDisabledMore(false);
+      })
+  }
+
   return (
     <Tab.Pane>
       <List verticalAlign={'middle'} divided className={'separated'}>
         {
-          props.stockers.map(stocker => <UserListItem user={stocker} key={`stock_${stocker.id}`}/>)
+          stockers.map((st: User) => <UserListItem user={st} key={`stock_${st.id}`}/>)
         }
       </List>
-      {props.hasMore
-        ? <Segment textAlign={'center'}
-                   attached
-                   secondary
-                   content={'Read More'}
-                   disabled={props.disableMore}
-                   onClick={props.readMore}
-        />
+      {hasMore
+        ? <Button icon={'reload'}
+                  color={'grey'}
+                  onClick={readMore}
+                  fluid
+                  disabled={disabledMore}
+                  content={'More'}/>
         : ''}
     </Tab.Pane>
   )

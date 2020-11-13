@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Like} from "../types/Like";
+import {Like} from "../types/qiita-types";
 
 const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 

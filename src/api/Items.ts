@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Item} from "../types/Item";
+import {Item} from '../types/qiita-types';
 import {addGetParameters} from "../util/url";
 
 const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;

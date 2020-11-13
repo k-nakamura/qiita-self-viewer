@@ -1,5 +1,5 @@
 import axios from "axios";
-import {User} from "../types/User";
+import {User} from "../types/qiita-types";
 import {addGetParameters} from "../util/url";
 
 export const PER_PAGE = 20;

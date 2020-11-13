@@ -1,8 +1,10 @@
-import React from "react";
-import {Icon, Label, List} from "semantic-ui-react";
-import {Item} from "../types/Item";
-import {useDispatch} from "react-redux";
-import {selectItem} from "../redux/action/ItemAction";
+import React, {useState} from "react";
+import {Button, Icon, Label, List} from "semantic-ui-react";
+import {Item} from '../types/qiita-types';
+import {useDispatch, useSelector} from "react-redux";
+import {selectItem} from "../redux/action/SelectAction";
+import {getItems} from "../api/Items";
+import {addStoredItems} from "../redux/action/ItemAction";
 
 function ItemListItem(props: { item: Item; }) {
   const formatDateTime = (date: string) =>
@@ -58,15 +60,38 @@ function ItemListItem(props: { item: Item; }) {
   )
 }
 
-function ItemList(props: { items: Item[]; }) {
+function ItemList() {
+  const dispatch = useDispatch();
+
+  const [disabledMore, setDisabledMore] = useState<boolean>(false);
+  const currentPage = useSelector(state => state.item.page);
+  const items = useSelector(state => state.item.items);
+  const hasMore = useSelector(state => state.item.hasMore);
+
+  const readMore = () => {
+    setDisabledMore(true);
+    getItems(currentPage + 1)
+      .then(r => {
+        dispatch(addStoredItems(items, r));
+        setDisabledMore(false);
+      })
+  }
+
   return (
     <div>
       <List divided className={'separated'}>
         {
-          props.items.map(item =>
+          items.map(item =>
             <ItemListItem item={item} key={item.id}/>)
         }
       </List>
+      {hasMore
+        ? <Button color={'grey'}
+                  onClick={readMore}
+                  disabled={disabledMore}
+                  fluid
+                  content={'More'}/>
+        : ''}
     </div>
   )
 }
