@@ -73,10 +73,8 @@ function ItemList() {
   useEffect(() => {
     setDisabledMore(true);
     getItems(currentPage)
-      .then(r => {
-        dispatch(addStoredItems(r));
-        setDisabledMore(false);
-      })
+      .then(r => dispatch(addStoredItems(r)))
+      .finally(() => setDisabledMore(false))
   }, [dispatch, currentPage]);
 
   return (
