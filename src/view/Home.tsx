@@ -1,21 +1,21 @@
 import React, {useEffect} from 'react';
 import {Container, Grid, Segment} from "semantic-ui-react";
-import {getItems} from '../api/Items';
 import ItemList from "../component/ItemList";
 import PageHeader from "../component/PageHeader";
 import ResponseList from "../component/ResponseList";
 import {useDispatch, useSelector} from "react-redux";
-import {storeItems} from "../redux/action/ItemAction";
+import {getUser} from "../api/User";
+import {storeUser} from "../redux/action/UserAction";
 
 function Home() {
   const dispatch = useDispatch();
 
-  const items = useSelector(state => state.item.items);
+  const user = useSelector(state => state.user.user);
 
   useEffect(() => {
-    getItems(1)
+    getUser()
       .then(r => {
-        dispatch(storeItems(r));
+        dispatch(storeUser(r));
       })
   }, [dispatch]);
 
@@ -27,7 +27,7 @@ function Home() {
           <Grid.Row centered>
             <Grid.Column width={9}>
               <Segment>
-                投稿:&nbsp;{items.length}&nbsp;件
+                投稿:&nbsp;{user?.items_count}&nbsp;件
                 <Segment attached>
                   <ItemList/>
                 </Segment>

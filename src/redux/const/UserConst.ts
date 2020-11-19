@@ -1,0 +1,1 @@
+export const GET_USER = 'USER_GET_USER' as const;

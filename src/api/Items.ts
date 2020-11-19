@@ -3,7 +3,7 @@ import {Item} from '../types/qiita-types';
 import {addGetParameters} from "../util/url";
 
 const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
-export const PER_PAGE = 20;
+export const PER_PAGE = 1;
 
 export function getItems(page: number = 1): Promise<Item[]> {
   return new Promise<Item[]>((resolve, reject) =>

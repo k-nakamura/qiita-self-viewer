@@ -1,5 +1,5 @@
-import {Item, Like, User} from "../../types/qiita-types";
-import {ADD_ITEMS, GET_ITEM, GET_ITEMS} from "../const/ItemConst";
+import {Item, Like} from "../../types/qiita-types";
+import {ADD_ITEMS, GET_ITEM, INCREMENT_PAGE} from "../const/ItemConst";
 import {ItemAction} from "../action/ItemAction";
 
 const initialState: {
@@ -9,49 +9,37 @@ const initialState: {
   selected: {
     item: null | Item,
     likes: Like[],
-    stocker: {
-      page: number,
-      hasMore: boolean,
-      stockers: User[],
-    },
   }
 } = {
   items: [],
-  page: 0,
+  page: 1,
   hasMore: false,
   selected: {
     item: null,
     likes: [],
-    stocker: {
-      page: 0,
-      hasMore: false,
-      stockers: [],
-    },
   }
 };
 
 function ItemReducer(state = initialState, action: ItemAction) {
   switch (action.type) {
-    case GET_ITEMS:
-      return {
-        ...state,
-        ...action.payload,
-        page: 1,
-      }
     case ADD_ITEMS:
       return {
         ...state,
-        ...action.payload,
-        page: state.page + 1,
+        items: [...state.items, ...action.payload.items],
       }
     case GET_ITEM:
       return {
         ...state,
         selected: {
-          ...state.selected,
-          ...action.payload,
+          item: action.payload.item,
+          likes: action.payload.likes,
         },
       };
+    case INCREMENT_PAGE:
+      return {
+        ...state,
+        page: state.page + 1,
+      }
     default:
       return {
         ...state,

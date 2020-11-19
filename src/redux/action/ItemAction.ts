@@ -1,20 +1,12 @@
-import {ADD_ITEMS, GET_ITEM, GET_ITEMS} from "../const/ItemConst";
+import {ADD_ITEMS, GET_ITEM, INCREMENT_PAGE} from "../const/ItemConst";
 import {Item, Like} from "../../types/qiita-types";
 import {PER_PAGE} from "../../api/Items";
 
 
-export const storeItems = (items: Item[]) => ({
-  type: GET_ITEMS,
-  payload: {
-    items,
-    hasMore: items.length === PER_PAGE,
-  }
-});
-
-export const addStoredItems = (currentItems: Item[], newItems: Item[]) => ({
+export const addStoredItems = (newItems: Item[]) => ({
   type: ADD_ITEMS,
   payload: {
-    items: [...currentItems, ...newItems],
+    items: [...newItems],
     hasMore: newItems.length === PER_PAGE,
   }
 });
@@ -27,9 +19,13 @@ export const storeItem = (item: Item, likes: Like[]) => ({
   }
 });
 
+export const incrementPage = () => ({
+  type: INCREMENT_PAGE,
+  payload: {}
+})
 
 export type ItemAction = (
-  | ReturnType<typeof storeItem>
   | ReturnType<typeof addStoredItems>
-  | ReturnType<typeof storeItems>
+  | ReturnType<typeof storeItem>
+  | ReturnType<typeof incrementPage>
   )

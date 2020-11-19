@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Icon, Label, List} from "semantic-ui-react";
 import {Item} from '../types/qiita-types';
 import {useDispatch, useSelector} from "react-redux";
 import {selectItem} from "../redux/action/SelectAction";
 import {getItems} from "../api/Items";
-import {addStoredItems} from "../redux/action/ItemAction";
+import {addStoredItems, incrementPage} from "../redux/action/ItemAction";
 
 function ItemListItem(props: { item: Item; }) {
   const formatDateTime = (date: string) =>
@@ -63,19 +63,21 @@ function ItemListItem(props: { item: Item; }) {
 function ItemList() {
   const dispatch = useDispatch();
 
-  const [disabledMore, setDisabledMore] = useState<boolean>(false);
+  const [isLoading, setDisabledMore] = useState<boolean>(false);
   const currentPage = useSelector(state => state.item.page);
   const items = useSelector(state => state.item.items);
-  const hasMore = useSelector(state => state.item.hasMore);
+  const itemsCount = useSelector(state => state.user.user?.items_count);
 
-  const readMore = () => {
+  const handleReadMore = () => dispatch(incrementPage());
+
+  useEffect(() => {
     setDisabledMore(true);
-    getItems(currentPage + 1)
+    getItems(currentPage)
       .then(r => {
-        dispatch(addStoredItems(items, r));
+        dispatch(addStoredItems(r));
         setDisabledMore(false);
       })
-  }
+  }, [dispatch, currentPage]);
 
   return (
     <div>
@@ -85,10 +87,10 @@ function ItemList() {
             <ItemListItem item={item} key={item.id}/>)
         }
       </List>
-      {hasMore
+      {itemsCount !== undefined && itemsCount > items.length
         ? <Button color={'grey'}
-                  onClick={readMore}
-                  disabled={disabledMore}
+                  onClick={handleReadMore}
+                  disabled={isLoading}
                   fluid
                   content={'More'}/>
         : ''}
